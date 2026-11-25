@@ -41,3 +41,14 @@ example
 # generated native folders
 /ios
 /android
+
+# local scraper databases, caches & design archives
+/lyriksa_scraped.db
+assets/data/lyriksa_scraped.db
+assets/data/lyriksa_scraped.db.bak
+scripts/__pycache__/
+stitch_design/
+stitch_lyriksa_malagasy_songbook_app.zip
+continue.md
+ROADMAP_SCRAPING.md
+STITCH_PROMPTS.md

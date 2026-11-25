@@ -1,0 +1,20 @@
+# Exclude developer scraping artifacts, backups, and design archives from EAS builds
+node_modules/
+.git/
+.expo/
+dist/
+web-build/
+
+# Unused scraper checkpoint DBs (~64 MB) — runtime uses assets/data/seed-songs.json
+/lyriksa_scraped.db
+assets/data/lyriksa_scraped.db
+assets/data/lyriksa_scraped.db.bak
+
+# Developer design archives, README screenshots & scraping tools
+docs/
+stitch_lyriksa_malagasy_songbook_app.zip
+stitch_design/
+scripts/
+ROADMAP_SCRAPING.md
+STITCH_PROMPTS.md
+continue.md
