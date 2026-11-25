@@ -9,7 +9,7 @@ on:
 jobs:
   build-ios-unsigned:
     name: Build Unsigned iOS (.ipa)
-    runs-on: macos-15
+    runs-on: macos-26
 
     steps:
       - name: Checkout repository
@@ -27,11 +27,15 @@ jobs:
       - name: Generate native iOS project (Expo Prebuild)
         env:
           CI: '1'
-        run: npx expo prebuild --platform ios --clean
+        run: |
+          npx expo prebuild --platform ios --clean
+          echo "export NODE_BINARY=$(command -v node)" > ios/.xcode.env.local
 
       - name: Archive Release iOS build (unsigned)
         run: |
           set -euo pipefail
+          xcodebuild -version
+          swift --version
           WORKSPACE=$(find ios -maxdepth 1 -name "*.xcworkspace" | head -n 1)
           SCHEME=$(basename "$WORKSPACE" .xcworkspace)
           echo "Archiving workspace=$WORKSPACE scheme=$SCHEME"
@@ -55,8 +59,13 @@ jobs:
             echo "Error: .app bundle not found in archive"
             exit 1
           fi
+          ls -la "$APP_PATH"
+          if [ ! -f "$APP_PATH/main.jsbundle" ]; then
+            echo "Error: main.jsbundle missing inside .app bundle"
+            exit 1
+          fi
           mkdir -p "$RUNNER_TEMP/ipa_build/Payload"
-          cp -R "$APP_PATH" "$RUNNER_TEMP/ipa_build/Payload/"
+          cp -a "$APP_PATH" "$RUNNER_TEMP/ipa_build/Payload/"
           cd "$RUNNER_TEMP/ipa_build"
           zip -qry "$GITHUB_WORKSPACE/Lyriksa-unsigned.ipa" Payload
           ls -lh "$GITHUB_WORKSPACE/Lyriksa-unsigned.ipa"
